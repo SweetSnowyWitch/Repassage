@@ -1,7 +1,7 @@
 ﻿
 namespace Repassage
 {
-    partial class Form1
+    partial class Repassage
     {
         /// <summary>
         ///  Required designer variable.
