@@ -6,6 +6,6 @@ namespace Repassage
 {
     class GameModel
     {
-
+        
     }
 }

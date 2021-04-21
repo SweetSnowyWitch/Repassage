@@ -14,6 +14,7 @@ namespace Repassage
     {
         public MainForm()
         {
+            Text = "Repassage";
             Size = new Size(1920, 1080);
             MaximizeBox = false;
             WindowState = FormWindowState.Maximized;
