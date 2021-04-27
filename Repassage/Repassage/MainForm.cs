@@ -15,15 +15,13 @@ namespace Repassage
         public MainForm()
         {
             Text = "Repassage";
-            Size = new Size(1920, 1080);
             MaximizeBox = false;
             WindowState = FormWindowState.Maximized;
             FormBorderStyle = FormBorderStyle.FixedSingle;
-        }
+            BackgroundImage = Resources.Background;
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
+            var game = new GameModel();
+            game.Start(this);
         }
     }
 }

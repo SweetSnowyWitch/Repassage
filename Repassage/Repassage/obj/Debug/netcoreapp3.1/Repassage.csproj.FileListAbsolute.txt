@@ -13,3 +13,4 @@ C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreap
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.dll
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.pdb
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.genruntimeconfig.cache
+C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.Resources.resources
