@@ -23,5 +23,10 @@ namespace Repassage
             var game = new GameModel();
             game.Start(this);
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
