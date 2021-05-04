@@ -8,11 +8,11 @@ namespace Repassage
     {
         public class Riflemen : ISoldier
         {
-            public int Amount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Corpses { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Salary { get => throw new NotImplementedException(); }
-            public int ATK { get => throw new NotImplementedException(); }
-            public int HP { get => throw new NotImplementedException(); }
+            public int Amount { get; set; }
+            public int Corpses { get; set; }
+            public int Salary { get; }
+            public int ATK { get; }
+            public int HP { get; }
 
             public void Die()
             {
@@ -27,11 +27,11 @@ namespace Repassage
 
         public class Horsemen : ISoldier
         {
-            public int Amount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Corpses { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Salary { get => throw new NotImplementedException(); }
-            public int ATK { get => throw new NotImplementedException(); }
-            public int HP { get => throw new NotImplementedException(); }           
+            public int Amount { get; set; }
+            public int Corpses { get; set; }
+            public int Salary { get ; }
+            public int ATK { get ; }
+            public int HP { get ; }           
 
             public void Die()
             {
@@ -46,11 +46,11 @@ namespace Repassage
 
         public class Infantrymen : ISoldier
         {
-            public int Amount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Corpses { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Salary { get => throw new NotImplementedException(); }
-            public int ATK { get => throw new NotImplementedException(); }
-            public int HP { get => throw new NotImplementedException(); }
+            public int Amount { get; set; }
+            public int Corpses { get; set; }
+            public int Salary { get ; }
+            public int ATK { get ; }
+            public int HP { get ; }
 
             public void Die()
             {
@@ -65,11 +65,11 @@ namespace Repassage
 
         public class Servicemen : ISoldier
         {
-            public int Amount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Corpses { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public int Salary { get => throw new NotImplementedException(); }
-            public int ATK { get => throw new NotImplementedException(); }
-            public int HP { get => throw new NotImplementedException(); }
+            public int Amount { get; set; }
+            public int Corpses { get; set; }
+            public int Salary { get ; }
+            public int ATK { get ; }
+            public int HP { get ; }
 
             public void Die()
             {

@@ -20,8 +20,8 @@ namespace Repassage
             FormBorderStyle = FormBorderStyle.FixedSingle;
             BackgroundImage = Resources.Background;
 
-            var game = new GameModel();
-            game.Start(this);
+            var game = new GameModel(this);
+            game.Start();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
