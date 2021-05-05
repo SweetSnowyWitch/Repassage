@@ -34,6 +34,26 @@ namespace Repassage
             DrawGame(riflemen.Amount + horsemen.Amount + infantrymen.Amount + servicemen.Amount);
         }
 
+        private void AddArchiveButton(PictureBox mainArchive, PictureBox localArchive, Point buttonLocation, string buttonText)
+        {
+            var archiveButton = AddButton(mainArchive, buttonLocation, buttonText);
+            localArchive.Parent = mainArchive;
+            localArchive.BringToFront();
+            archiveButton.Click += (sender, args) => localArchive.Visible = true;
+            localArchive.Click += (sender, args) => localArchive.Visible = false;
+        }
+
+        private void AddLetter(PictureBox parent, Point buttonLocation, int number, string letterText)
+        {
+            var letter = AddTextBox(new Point(0, 0), new Size(1000, 840), false, letterText);
+            letter.Parent = parent;
+            letter.BringToFront();
+            letter.Click += (sender, args) => letter.Visible = false;
+
+            var letterButton = AddButton(parent, buttonLocation, String.Format("Письмо {0}", number));
+            letterButton.Click += (sender, args) => letter.Visible = true;
+        }
+
         private void AddResource(Point iconLocation, Point amountLocation, Image imageIcon, int amount)
         {
             var resourceAmount = new TextBox();
@@ -67,6 +87,37 @@ namespace Repassage
             trackLabel.Text = String.Format(phrase, trackBar.Value);
         }
 
+        private TextBox AddTextBox(Point location, Size size, bool isVisible, string text)
+        {
+            var newTextBox = new TextBox();
+            newTextBox.Visible = isVisible;
+            newTextBox.WordWrap = true;
+            newTextBox.Multiline = true;
+            newTextBox.ReadOnly = true;
+            newTextBox.Font = new Font("Bad Script", 26);
+            newTextBox.BackColor = Color.AntiqueWhite;
+            newTextBox.Location = location;
+            newTextBox.ScrollBars = ScrollBars.Vertical;
+            newTextBox.ClientSize = size;
+            newTextBox.Text = text;
+            gameForm.Controls.Add(newTextBox);
+
+            return newTextBox;
+        }
+
+        private Button AddButton(PictureBox parent, Point location, string title)
+        {
+            var newButton = new Button();
+            newButton.Parent = parent;
+            newButton.Text = title;
+            newButton.Font = new Font("Arial", 20);
+            newButton.BackColor = Color.Bisque;
+            newButton.ClientSize = new Size(900, 100);
+            newButton.Location = location;
+
+            return newButton;
+        }
+
         private PictureBox AddImage(Point location, Image image, bool isVisible, Color backColor, Size imageSize)
         {
             var gameImage = new PictureBox();
@@ -80,13 +131,34 @@ namespace Repassage
         }
 
         private void DrawGame(int armyTotalAmount)
-        {           
+        {
             var characterText = AddImage(new Point(500, 820), Resources.Textbox, false, Color.Transparent, Resources.Textbox.Size);
             var archiveIcon = AddImage(new Point(300, 960), Resources.ArchiveIcon, true, Color.Transparent, Resources.ArchiveIcon.Size);
             var orderIcon = AddImage(new Point(1450, 960), Resources.OrderIcon, true, Color.Transparent, Resources.OrderIcon.Size);
-            var archive = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, new Size(1000, 840));           
-            var order = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, new Size(1000, 840));
+            var archive = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, new Size(1000, 840));
             
+            var ariaArchive = AddImage(new Point(0, 0), default, false, Color.AntiqueWhite, archive.Size);
+            AddArchiveButton(archive, ariaArchive, new Point(50, 50), "Письма Арии");
+            var ariaLettersCounter = 1;
+
+            var warArchive = AddImage(new Point(0, 0), default, false, Color.AntiqueWhite, archive.Size);
+            AddArchiveButton(archive, warArchive, new Point(50, 175), "Приказы Военного Совета");
+            var warLettersCounter = 1;
+
+            var scoutArchive = AddImage(new Point(0, 0), default, false, Color.AntiqueWhite, archive.Size);
+            AddArchiveButton(archive, scoutArchive, new Point(50, 300), "Информация от разведки");
+            var scoutLettersCounter = 1;
+
+            var friendsArchive = AddImage(new Point(0, 0), default, false, Color.AntiqueWhite, archive.Size);
+            AddArchiveButton(archive, friendsArchive, new Point(50, 425), "Личные сообщения");
+            var friendsLettersCounter = 1;
+
+            var infoArchive = AddImage(new Point(0, 0), default, false, Color.AntiqueWhite, archive.Size);
+            AddArchiveButton(archive, infoArchive, new Point(50, 550), "Доклады о состоянии роты");
+            var infoLettersCounter = 1;
+
+            var order = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, archive.Size);
+
             AddResource(new Point(20, -1), new Point(180, 10), Resources.AriaIcon, ariaPower.Amount);
             AddResource(new Point(300, -1), new Point(450, 10), Resources.LoyaltyIcon, loyalty.Amount);
             AddResource(new Point(580, -1), new Point(730, 10), Resources.MoneyIcon, money.Amount);
@@ -96,27 +168,18 @@ namespace Repassage
             AddImage(new Point(0, 0), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
             AddImage(new Point(0, 960), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
 
-            var letters = GetLetters(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\FirstWeek.txt");
-            var currentLetter = new TextBox();
-            currentLetter.Visible = false;
-            currentLetter.WordWrap = true;
-            currentLetter.Multiline = true;
-            currentLetter.ReadOnly = true;
-            currentLetter.Font = new Font("Bad Script", 26);
-            currentLetter.BackColor = Color.AntiqueWhite;
-            currentLetter.Location = new Point(450, 100);
-            currentLetter.ScrollBars = ScrollBars.Vertical;
-            currentLetter.ClientSize = new Size(1000, 840);
-            currentLetter.Text = letters.First();
-            letters = letters.Skip(1);         
+            var rawLetters = GetLetters(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\FirstWeek.txt");
+            var currentLetter = AddTextBox(new Point(450, 100), archive.Size, false, rawLetters.First().Value);
+            AddLetterToArchive(rawLetters);
+            var letters = rawLetters.Skip(1);
             gameForm.Controls.Add(currentLetter);
 
-            var shop = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, new Size(1000, 840));
+            var shop = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, archive.Size);
             AddTrackBar(shop, new Point(50, 50), new Point(50, 100), "Количество покупаемого снаряжения: {0}", 100);
             AddTrackBar(shop, new Point(50, 150), new Point(50, 200), "Количество покупаемых лекарств: {0}", 100);
             AddTrackBar(shop, new Point(50, 250), new Point(50, 300), "Количество нанимаемых людей: {0}", 100);
             AddTrackBar(shop, new Point(50, 350), new Point(50, 400), "Выделяемая Арии сумма: {0}", money.Amount);
-            
+
             var lettersTable = AddImage(new Point(0, 550), Resources.Table, true, Color.Transparent, Resources.Table.Size);
             var shopMenu = AddImage(new Point(900, 400), Resources.Boxes, true, Color.Transparent, Resources.Boxes.Size);
 
@@ -126,7 +189,8 @@ namespace Repassage
             currentLetter.Click += (sender, args) =>
             {
                 currentLetter.Visible = false;
-                currentLetter.Text = letters.FirstOrDefault();
+                currentLetter.Text = letters.FirstOrDefault().Value;
+                if (letters.Count() > 0) AddLetterToArchive(letters);
                 letters = letters.Skip(1);
             };
 
@@ -137,6 +201,33 @@ namespace Repassage
             {
                 if (currentLetter.Text.Length > 0) OtherBoxesUnvisible(default, currentLetter);
             };
+
+            void AddLetterToArchive(IEnumerable<KeyValuePair<string, string>> letters)
+            {
+                switch (letters.First().Key)
+                {
+                    case "(Ария)":
+                        AddLetter(ariaArchive, new Point(50, 50 + 125 * (ariaLettersCounter - 1)), 
+                            ariaLettersCounter++, currentLetter.Text);
+                        break;
+                    case "(Военсовет)":
+                        AddLetter(warArchive, new Point(50, 50 + 125 * (warLettersCounter - 1)), 
+                            warLettersCounter++, currentLetter.Text);
+                        break;
+                    case "(Разведка)":
+                        AddLetter(scoutArchive, new Point(50, 50 + 125 * (scoutLettersCounter - 1)), 
+                            scoutLettersCounter++, currentLetter.Text);
+                        break;                       
+                    case "(Друг)":
+                        AddLetter(friendsArchive, new Point(50, 50 + 125 * (friendsLettersCounter - 1)), 
+                            friendsLettersCounter++, currentLetter.Text);
+                        break;
+                    case "(Доклад)":
+                        AddLetter(infoArchive, new Point(50, 50 + 125 * (infoLettersCounter - 1)), 
+                            infoLettersCounter++, currentLetter.Text);
+                        break;
+                }
+            }
 
             void OtherBoxesUnvisible(PictureBox exceptPictureBox, TextBox exceptTextBox)
             {
@@ -149,37 +240,34 @@ namespace Repassage
             }
         }
 
-        private IEnumerable<string> GetLetters(string scenarioPath)
+        private Dictionary<string, string> GetLetters(string scenarioPath)
         {
             var text = File.ReadAllText(scenarioPath).Split(' ');
+            var letters = new Dictionary<string, string>();
             var isLetterFirst = true;
+            var newSender = "";
             var newLetter = new StringBuilder();
 
             foreach (var word in text)
             {
-                //if (word[0].Equals('(')) - проверка на адресата письма
-
-                if (word[0].Equals('(') && isLetterFirst)
+                if (word[0].Equals('('))
                 {
-                    isLetterFirst = false;
-                    continue;
-                }
+                    if (isLetterFirst)
+                    {
+                        newSender = word;
+                        isLetterFirst = false;
+                        continue;
+                    }
 
-                if (!word[0].Equals('('))
-                    newLetter.Append(word + " ");
-
-                else
-                {
-                    yield return newLetter.ToString();
+                    letters.Add(newSender, newLetter.ToString());
                     newLetter = new StringBuilder();
+                    newSender = word;
                 }
+
+                else newLetter.Append(word + " ");
             }
-        }
 
-        private IEnumerable<string> GetPhrases(string phrasesPath)
-        {
-
-            return default;
+            return letters;
         }
     }
 }
