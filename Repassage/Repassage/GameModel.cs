@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Repassage
@@ -26,12 +27,13 @@ namespace Repassage
             gameForm = newForm;
             ariaPower.Amount = 10;
             loyalty.Amount = 10;
-            money.Amount = 100;
+            money.Amount = 1000;
         }
 
         public void Start()
         {
-            DrawGame(riflemen.Amount + horsemen.Amount + infantrymen.Amount + servicemen.Amount);
+            DrawGame(riflemen.Amount + horsemen.Amount + infantrymen.Amount + servicemen.Amount,
+                @"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\FirstWeek.txt");
         }
 
         private void AddArchiveButton(PictureBox mainArchive, PictureBox localArchive, Point buttonLocation, string buttonText)
@@ -62,12 +64,13 @@ namespace Repassage
             resourceAmount.BackColor = Color.AntiqueWhite;
             resourceAmount.Location = amountLocation;
             resourceAmount.Text = amount.ToString();
+            resourceAmount.Size = new Size(resourceAmount.Text.Length * 35, 50);
             resourceAmount.Font = new Font("Arial", 32);
             AddImage(iconLocation, imageIcon, true, Color.Transparent, imageIcon.Size);
             gameForm.Controls.Add(resourceAmount);
         }
 
-        private void AddTrackBar(Control parent, Point labelLocation, Point trackBarLocation, string phrase, int maxAmount)
+        private TrackBar AddTrackBar(Control parent, Point labelLocation, Point trackBarLocation, string phrase, int maxAmount, int price)
         {
             var trackLabel = new Label();
 
@@ -84,7 +87,11 @@ namespace Repassage
             trackBar.ClientSize = new Size(900, 100);
             trackBar.Maximum = maxAmount;
             trackBar.Scroll += (sender, args) =>
-            trackLabel.Text = String.Format(phrase, trackBar.Value);
+            {              
+                trackLabel.Text = String.Format(phrase, trackBar.Value);
+            };           
+
+            return trackBar;
         }
 
         private TextBox AddTextBox(Point location, Size size, bool isVisible, string text)
@@ -130,7 +137,7 @@ namespace Repassage
             return gameImage;
         }
 
-        private void DrawGame(int armyTotalAmount)
+        private void DrawGame(int armyTotalAmount, string scenarioPath)
         {
             var characterText = AddImage(new Point(500, 820), Resources.Textbox, false, Color.Transparent, Resources.Textbox.Size);
             var archiveIcon = AddImage(new Point(300, 960), Resources.ArchiveIcon, true, Color.Transparent, Resources.ArchiveIcon.Size);
@@ -168,17 +175,47 @@ namespace Repassage
             AddImage(new Point(0, 0), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
             AddImage(new Point(0, 960), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
 
-            var rawLetters = GetLetters(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\FirstWeek.txt");
-            var currentLetter = AddTextBox(new Point(450, 100), archive.Size, false, rawLetters.First().Value);
-            AddLetterToArchive(rawLetters);
-            var letters = rawLetters.Skip(1);
+            var letters = GetLetters(scenarioPath).Skip(0);
+            var currentLetter = AddTextBox(new Point(450, 100), archive.Size, false, letters.First().Value);
             gameForm.Controls.Add(currentLetter);
 
             var shop = AddImage(new Point(450, 100), default, false, Color.AntiqueWhite, archive.Size);
-            AddTrackBar(shop, new Point(50, 50), new Point(50, 100), "Количество покупаемого снаряжения: {0}", 100);
-            AddTrackBar(shop, new Point(50, 150), new Point(50, 200), "Количество покупаемых лекарств: {0}", 100);
-            AddTrackBar(shop, new Point(50, 250), new Point(50, 300), "Количество нанимаемых людей: {0}", 100);
-            AddTrackBar(shop, new Point(50, 350), new Point(50, 400), "Выделяемая Арии сумма: {0}", money.Amount);
+            var equipmentBar = AddTrackBar(shop, new Point(50, 50), new Point(50, 100), "Количество покупаемого снаряжения: {0}", 
+                (int)Math.Floor(money.Amount/ (equipment.Price * loyalty.SaleRate)), 
+                (int)Math.Round(equipment.Price * loyalty.SaleRate));
+            var medicineBar = AddTrackBar(shop, new Point(50, 150), new Point(50, 200), "Количество покупаемых лекарств: {0}", 
+                (int)Math.Floor(money.Amount/(medicine.Price * loyalty.SaleRate)),
+                (int)Math.Round(medicine.Price * loyalty.SaleRate));
+            var peopleBar = AddTrackBar(shop, new Point(50, 250), new Point(50, 300), "Количество нанимаемых людей: {0}", 
+                ariaPower.Amount / ariaPower.ConvertRate, ariaPower.ConvertRate);
+            var ariaBar = AddTrackBar(shop, new Point(50, 350), new Point(50, 400), "Выделяемая Арии сумма: {0}", money.Amount, 1);
+            var armyBar = AddTrackBar(shop, new Point(50, 450), new Point(50, 500), "Выплачиваемая роте сумма: {0}", money.Amount, 1);
+            var battleBar = AddButton(shop, new Point(50, 580), "Принять участие в грядущей битве: Нет");
+            var orderText = AddTextBox(new Point(50, 50), new Size(900, 600), true,
+                String.Format("Количество заказанного снаряжения: {0} \r\nСтоимость: {1} валюты/шт." +
+                "\r\nКоличество заказанных лекарств: {2} \r\nСтоимость: {3} валюты/шт." +
+                "\r\nКоличество нанятых людей: {4} \r\nСтоимость найма: {5} ед.влияния/чел." +
+                "\r\nВыделенная Арии сумма: {6} \r\nВыплата роте: {7}, \r\nПринимается ли участие в битве: {8}",
+                equipmentBar.Value, (int)Math.Round(equipment.Price * loyalty.SaleRate), medicineBar.Value,
+                (int)Math.Round(medicine.Price * loyalty.SaleRate), peopleBar.Value, ariaPower.ConvertRate,
+                ariaBar.Value, armyBar.Value, battleBar.Text.Split(' ').Last()));           
+            var orderButton = AddButton(order, new Point(50, 680), "Отдать приказ и завершить неделю");
+            orderText.Parent = order;
+            
+            battleBar.Click += (sender, args) =>
+            {
+                if (battleBar.Text.Split(' ').Last().Equals("Да"))
+                    battleBar.Text = "Принять участие в грядущей битве: Нет";
+                else battleBar.Text = "Принять участие в грядущей битве: Да";
+
+                OrderTextUPD();
+            };
+
+            equipmentBar.Scroll += (sender, args) => OrderTextUPD();
+            medicineBar.Scroll += (sender, args) => OrderTextUPD();
+            peopleBar.Scroll += (sender, args) => OrderTextUPD();
+            ariaBar.Scroll += (sender, args) => OrderTextUPD();
+            armyBar.Scroll += (sender, args) => OrderTextUPD();
 
             var lettersTable = AddImage(new Point(0, 550), Resources.Table, true, Color.Transparent, Resources.Table.Size);
             var shopMenu = AddImage(new Point(900, 400), Resources.Boxes, true, Color.Transparent, Resources.Boxes.Size);
@@ -189,9 +226,9 @@ namespace Repassage
             currentLetter.Click += (sender, args) =>
             {
                 currentLetter.Visible = false;
-                currentLetter.Text = letters.FirstOrDefault().Value;
                 if (letters.Count() > 0) AddLetterToArchive(letters);
                 letters = letters.Skip(1);
+                currentLetter.Text = letters.FirstOrDefault().Value;            
             };
 
             archiveIcon.Click += (sender, args) => OtherBoxesUnvisible(archive, default);
@@ -201,6 +238,17 @@ namespace Repassage
             {
                 if (currentLetter.Text.Length > 0) OtherBoxesUnvisible(default, currentLetter);
             };
+
+            void OrderTextUPD()
+            {
+                orderText.Text = String.Format("Количество заказанного снаряжения: {0} \r\nСтоимость: {1} валюты/шт." +
+                    "\r\nКоличество заказанных лекарств: {2} \r\nСтоимость: {3} валюты/шт." +
+                    "\r\nКоличество нанятых людей: {4} \r\nСтоимость найма: {5} ед.влияния/чел." +
+                    "\r\nВыделенная Арии сумма: {6} \r\nВыплата роте: {7} \r\nПринимается ли участие в битве: {8}",
+                    equipmentBar.Value, (int)Math.Round(equipment.Price * loyalty.SaleRate), medicineBar.Value,
+                    (int)Math.Round(medicine.Price * loyalty.SaleRate), peopleBar.Value, ariaPower.ConvertRate,
+                    ariaBar.Value, armyBar.Value, battleBar.Text.Split(' ').Last());
+            }
 
             void AddLetterToArchive(IEnumerable<KeyValuePair<string, string>> letters)
             {

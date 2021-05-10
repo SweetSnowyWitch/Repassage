@@ -7,14 +7,14 @@ namespace Repassage
     class AriaPower
     {
         public int Amount;
-        public double GrowthRate;
-        public double ConvertRate;
+        public int GrowthRate;
+        public int ConvertRate = 1;
     }
 
     class Loyalty
     {
         public int Amount;
-        public double SaleRate;
+        public double SaleRate = 1;
     }
 
     class Money
@@ -25,12 +25,12 @@ namespace Repassage
     class Equipment
     {
         public int Amount;
-        public readonly int Price;
+        public readonly int Price = 150;
     }
 
     class Medicine
     {
         public int Amount;
-        public readonly int Price;
+        public readonly int Price = 100;
     }
 }

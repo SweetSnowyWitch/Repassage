@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Repassage
 {
     partial class MainForm
