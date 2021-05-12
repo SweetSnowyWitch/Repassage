@@ -4,6 +4,10 @@
 
 ![image](https://user-images.githubusercontent.com/75910420/116398501-4f32c500-a841-11eb-9fcb-4d0390329d0f.png)
 
+*11.05*
+![image](https://user-images.githubusercontent.com/75910420/117955957-03e4e000-b332-11eb-9052-0aaa87fb0eaa.png)
+
+
 
 *Краткое описание событий:*
 
