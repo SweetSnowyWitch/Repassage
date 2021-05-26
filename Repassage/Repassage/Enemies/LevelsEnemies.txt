@@ -1,0 +1,5 @@
+(10 week) 
+riflemen 0 horsemen 0 infantrymen 10 servicemen 0  (20 week) 
+riflemen 30 horsemen 40 infantrymen 80 servicemen 0  (31 week) 
+riflemen 90 horsemen 120 infantrymen 160 servicemen 400 (32 week) 
+riflemen 60 horsemen 80 infantrymen 130 servicemen 400 (End)

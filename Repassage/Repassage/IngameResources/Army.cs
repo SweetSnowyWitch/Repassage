@@ -4,82 +4,35 @@ using System.Text;
 
 namespace Repassage
 {
-    class Army
+    public class Riflemen : ISoldier
     {
-        public class Riflemen : ISoldier
-        {
-            public int Amount { get; set; }
-            public int Corpses { get; set; }
-            public int Salary { get; }
-            public int ATK { get; }
-            public int HP { get; }
+        public int Amount { get; set; }
+        public int Salary { get => 50; }
+        public int ATK { get => 50; }
+        public int HP { get => 20; }
+    }
 
-            public void Die()
-            {
-                throw new NotImplementedException();
-            }
+    public class Horsemen : ISoldier
+    {
+        public int Amount { get; set; }
+        public int Salary { get => 50; }
+        public int ATK { get => 20; }
+        public int HP { get => 50; }
+    }
 
-            public void Recover()
-            {
-                throw new NotImplementedException();
-            }
-        }
+    public class Infantrymen : ISoldier
+    {
+        public int Amount { get; set; }
+        public int Salary { get => 20; }
+        public int ATK { get => 20; }
+        public int HP { get => 20; }
+    }
 
-        public class Horsemen : ISoldier
-        {
-            public int Amount { get; set; }
-            public int Corpses { get; set; }
-            public int Salary { get ; }
-            public int ATK { get ; }
-            public int HP { get ; }           
-
-            public void Die()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Recover()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class Infantrymen : ISoldier
-        {
-            public int Amount { get; set; }
-            public int Corpses { get; set; }
-            public int Salary { get ; }
-            public int ATK { get ; }
-            public int HP { get ; }
-
-            public void Die()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Recover()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class Servicemen : ISoldier
-        {
-            public int Amount { get; set; }
-            public int Corpses { get; set; }
-            public int Salary { get ; }
-            public int ATK { get ; }
-            public int HP { get ; }
-
-            public void Die()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Recover()
-            {
-                throw new NotImplementedException();
-            }
-        }
+    public class Servicemen : ISoldier
+    {
+        public int Amount { get; set; }
+        public int Salary { get => 10; }
+        public int ATK { get => 5; }
+        public int HP { get => 15; }
     }
 }
