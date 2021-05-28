@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Repassage.Enemies
 {
     class Battle
     {
-        public void Start(ref Riflemen playerRiflemen, ref Horsemen playerHorsemen, ref Infantrymen playerInfantrymen,
-            ref Servicemen playerServicemen, ref Medicine playerMedicine, ref Equipment playerEquipment, int level)
+        public void Start(Form gameForm, ref bool isNotEnded, ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen,
+            ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen, ref Medicine playerMedicine,
+            ref Equipment playerEquipment, int level)
         {
             var enemyRiflemen = new Riflemen();
             var enemyHorsemen = new Horsemen();
             var enemyInfantrymen = new Infantrymen();
             var enemyServicemen = new Servicemen();
+            var end = new Endings();
 
             BuildEnemyArmy(ref enemyRiflemen, ref enemyHorsemen, ref enemyInfantrymen, ref enemyServicemen, level);
             var enemyATK = enemyRiflemen.ATK * enemyRiflemen.Amount + enemyHorsemen.ATK * enemyHorsemen.Amount
@@ -26,12 +29,14 @@ namespace Repassage.Enemies
             var playerHP = playerRiflemen.HP * playerRiflemen.Amount + playerHorsemen.HP * playerHorsemen.Amount
                 + playerInfantrymen.HP * playerInfantrymen.Amount + playerServicemen.HP * playerServicemen.Amount + playerMedicine.Amount;
 
-            if (playerATK >= enemyHP) enemyHP = 0;
-            DealResources(ref playerMedicine, ref playerEquipment, playerHP, enemyATK);
-
-            if (playerMedicine.Amount == 0)
-                KillPlayerArmy(ref playerRiflemen, ref playerHorsemen,
+            DealResources(ref playerMedicine, ref playerEquipment, ref playerATK, ref enemyHP, ref enemyATK);
+            if (playerMedicine.Amount == 0 && enemyATK > 0)
+                KillPlayerArmy(ref totalCorpses, ref playerRiflemen, ref playerHorsemen,
                     ref playerInfantrymen, ref playerServicemen, enemyATK);
+
+            if (playerATK < enemyHP || playerRiflemen.Amount + playerHorsemen.Amount
+                + playerInfantrymen.Amount + playerServicemen.Amount <= 0)
+                end.DeathInBatte(ref isNotEnded, gameForm);
         }
 
         private void BuildEnemyArmy(ref Riflemen enemyRiflemen, ref Horsemen enemyHorsemen,
@@ -61,15 +66,20 @@ namespace Repassage.Enemies
             enemyServicemen.Amount = enemyArmy[3];
         }
 
-        private void DealResources(ref Medicine playerMedicine, ref Equipment playerEquipment, int playerHP, int enemyATK)
+        private void DealResources(ref Medicine playerMedicine, ref Equipment playerEquipment, ref int playerATK,
+            ref int enemyHP, ref int enemyATK)
         {
-            var rnd = new Random();
-            playerEquipment.Amount *= rnd.Next(0, 1);
-            if (playerHP - enemyATK < playerMedicine.Amount)
-                playerMedicine.Amount = Math.Max(0, playerHP - enemyATK);
+            var medicineAmount = playerMedicine.Amount;
+            var equipmentAmount = playerEquipment.Amount;
+
+            playerEquipment.Amount = Math.Max(0, equipmentAmount - enemyHP);
+            enemyHP -= equipmentAmount;
+
+            playerMedicine.Amount = Math.Max(0, medicineAmount - enemyATK);
+            enemyATK -= medicineAmount;
         }
 
-        private void KillPlayerArmy(ref Riflemen playerRiflemen, ref Horsemen playerHorsemen,
+        private void KillPlayerArmy(ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen,
             ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen, int damage)
         {
             var rnd = new Random();
@@ -80,24 +90,24 @@ namespace Repassage.Enemies
             UpdateDamage(ref playerRiflemen, ref playerHorsemen,
                         ref playerInfantrymen, ref playerServicemen);
 
-            while (damage > 0 && playerRiflemen.Amount + playerHorsemen.Amount 
+            while (damage > 0 && playerRiflemen.Amount + playerHorsemen.Amount
                 + playerInfantrymen.Amount + playerServicemen.Amount != 0)
             {
-                playerRiflemen.Amount = KillArmyPart(ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
-                                ref playerServicemen, playerRiflemen.Amount, ref damage, riflemenDamage);
-                playerHorsemen.Amount = KillArmyPart(ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
-                    ref playerServicemen, playerHorsemen.Amount, ref damage, horsemenDamage);
-                playerInfantrymen.Amount = KillArmyPart(ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
-                    ref playerServicemen, playerInfantrymen.Amount, ref damage, infantrymenDamage);
-                playerServicemen.Amount = KillArmyPart(ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
-                    ref playerServicemen, playerServicemen.Amount, ref damage, servicemenDamage);
+                playerRiflemen.Amount = KillArmyPart(ref totalCorpses, ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
+                                ref playerServicemen, playerRiflemen.Amount, ref damage, riflemenDamage, playerRiflemen.HP);
+                playerHorsemen.Amount = KillArmyPart(ref totalCorpses, ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
+                    ref playerServicemen, playerHorsemen.Amount, ref damage, horsemenDamage, playerHorsemen.HP);
+                playerInfantrymen.Amount = KillArmyPart(ref totalCorpses, ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
+                    ref playerServicemen, playerInfantrymen.Amount, ref damage, infantrymenDamage, playerInfantrymen.HP);
+                playerServicemen.Amount = KillArmyPart(ref totalCorpses, ref playerRiflemen, ref playerHorsemen, ref playerInfantrymen,
+                    ref playerServicemen, playerServicemen.Amount, ref damage, servicemenDamage, playerServicemen.HP);
             }
 
             void UpdateDamage(ref Riflemen playerRiflemen, ref Horsemen playerHorsemen,
             ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen)
             {
-                if (damage > playerRiflemen.HP) 
-                        riflemenDamage = rnd.Next(1, damage / playerRiflemen.HP);
+                if (damage > playerRiflemen.HP)
+                    riflemenDamage = rnd.Next(1, damage / playerRiflemen.HP);
 
                 if (damage > playerHorsemen.HP)
                     horsemenDamage = rnd.Next(1, damage / playerHorsemen.HP);
@@ -109,17 +119,21 @@ namespace Repassage.Enemies
                     servicemenDamage = rnd.Next(1, damage / playerServicemen.HP);
             }
 
-            int KillArmyPart(ref Riflemen playerRiflemen, ref Horsemen playerHorsemen, ref Infantrymen playerInfantrymen,
-                ref Servicemen playerServicemen, int amount, ref int damage, int partDamage)
+            int KillArmyPart(ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen, ref Infantrymen playerInfantrymen,
+                ref Servicemen playerServicemen, int amount, ref int damage, int partDamage, int partHP)
             {
                 if (damage > 0 && partDamage > 0 && amount > 0)
                 {
-                    var corpses = rnd.Next(0, partDamage);
-                    if (amount - corpses > 0) 
-                        amount = Math.Max(0, amount - corpses);
-                    damage -= partDamage;
-                    UpdateDamage(ref playerRiflemen, ref playerHorsemen,
+                    var corpses = rnd.Next(1, partDamage);
+                    if (amount - corpses >= 0)
+                    {
+                        amount -= corpses;
+                        totalCorpses += corpses;
+                        damage -= partHP * corpses;
+
+                        UpdateDamage(ref playerRiflemen, ref playerHorsemen,
                         ref playerInfantrymen, ref playerServicemen);
+                    }
                 }
 
                 return amount;

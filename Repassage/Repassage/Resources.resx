@@ -130,11 +130,23 @@
   <data name="Background" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Beginning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Beginning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Boxes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Boxes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Criminal_Ending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Criminal Ending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeathInBattle_Ending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DeathInBattle Ending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="EquipmentIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\EquipmentIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="LoyaltyIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\LoyalityIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,10 +163,16 @@
   <data name="OrderIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\OrderIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Riot_Ending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Riot Ending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Table" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Table.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Textbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Textbox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Triumph_Ending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Triumph Ending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
