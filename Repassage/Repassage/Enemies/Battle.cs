@@ -42,8 +42,9 @@ namespace Repassage.Enemies
         private void BuildEnemyArmy(ref Riflemen enemyRiflemen, ref Horsemen enemyHorsemen,
             ref Infantrymen enemyInfantrymen, ref Servicemen enemyServicemen, int level)
         {
-            var allLevels = ReadLevelsFile(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Enemies\LevelsEnemies.txt").Skip(0);
-
+            var fileReader = new FileReader(); 
+            var allLevels = fileReader.GetLevels(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Enemies\LevelsEnemies.txt")
+                                      .Skip(0);
             switch (level)
             {
                 case 20:
@@ -138,42 +139,6 @@ namespace Repassage.Enemies
 
                 return amount;
             }
-        }
-
-        private Dictionary<int, int[]> ReadLevelsFile(string levelsPath)
-        {
-            var rawLevels = File.ReadAllText(levelsPath).Split(' ');
-            var allLevels = new Dictionary<int, int[]>();
-            var isFirstLevel = true;
-            var army = new List<int>();
-            var route = new StringBuilder();
-
-            foreach (var word in rawLevels)
-            {
-                if (word.Length > 0 && word[0].Equals('('))
-                {
-                    if (isFirstLevel)
-                    {
-                        foreach (var letter in word)
-                            if (Char.IsDigit(letter)) route.Append(letter);
-                        isFirstLevel = false;
-                        continue;
-                    }
-
-                    if (route.Length > 0 && Int32.Parse(route.ToString()) > 0)
-                        allLevels.Add(Int32.Parse(route.ToString()), army.ToArray());
-
-                    route = new StringBuilder();
-                    foreach (var letter in word)
-                        if (Char.IsDigit(letter)) route.Append(letter);
-                    army = new List<int>();
-                }
-
-                else if (word.Length > 0 && Char.IsDigit(word[0]))
-                    army.Add(Int32.Parse(word));
-            }
-
-            return allLevels;
         }
     }
 }
