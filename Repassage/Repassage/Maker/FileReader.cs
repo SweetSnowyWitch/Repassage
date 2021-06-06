@@ -12,7 +12,7 @@ namespace Repassage
         public string GetFilePath(string target)
         {
             var localFolder = Path.GetDirectoryName(Application.ExecutablePath);
-            var index = localFolder.IndexOf("bin");
+            var index = localFolder.LastIndexOf("bin");
             localFolder = localFolder.Substring(0, index);
             var path = Path.GetFullPath(Path.Combine(localFolder, @"..\Repassage\" + target));
 
