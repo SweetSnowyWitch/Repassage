@@ -10,20 +10,21 @@ namespace Repassage
     public class Endings
     {
         public void Riot(ref bool isNotEnded, Form gameForm) => CreateEnding(ref isNotEnded, gameForm, Color.Silver,
-            Resources.Riot_Ending, @"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Cutscenes\Texts\Riot Ending.txt");
+            Resources.Riot_Ending, "Riot Ending.txt");
 
         public void Criminal(ref bool isNotEnded, Form gameForm) => CreateEnding(ref isNotEnded, gameForm, Color.DarkSalmon,
-            Resources.Criminal_Ending, @"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Cutscenes\Texts\Criminal Ending.txt");
+            Resources.Criminal_Ending, "Criminal Ending.txt");
 
         public void DeathInBatte(ref bool isNotEnded, Form gameForm) => CreateEnding(ref isNotEnded, gameForm, Color.RosyBrown,
-            Resources.DeathInBattle_Ending, @"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Cutscenes\Texts\DeathInBattle Ending.txt");
+            Resources.DeathInBattle_Ending, "DeathInBattle Ending.txt");
 
         public void Triumph(ref bool isNotEnded, Form gameForm) => CreateEnding(ref isNotEnded, gameForm, Color.BlanchedAlmond,
-            Resources.Triumph_Ending, @"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Cutscenes\Texts\Triumph Ending.txt");
+            Resources.Triumph_Ending, "Triumph Ending.txt");
 
-        private void CreateEnding(ref bool isNotEnded, Form gameForm, Color backColor, Bitmap backImage, string endingPath)
+        private void CreateEnding(ref bool isNotEnded, Form gameForm, Color backColor, Bitmap backImage, string endingTextName)
         {
             var endingText = new TextBox();
+            var fileReader = new FileReader();
             endingText.Visible = false;
             endingText.WordWrap = true;
             endingText.Multiline = true;
@@ -32,7 +33,7 @@ namespace Repassage
             endingText.BackColor = backColor;
             endingText.Location = new Point(450, 0);
             endingText.ClientSize = new Size(1000, 1080);
-            endingText.Text = File.ReadAllText(endingPath);
+            endingText.Text = File.ReadAllText(fileReader.GetFilePath(@"Cutscenes\Texts\" + endingTextName));
             endingText.Click += (sender, args) => gameForm.Close();
             gameForm.Controls.Add(endingText);
 

@@ -11,6 +11,7 @@ namespace Repassage
     class GameModel
     {
         private Form gameForm = new Form();
+        private FileReader fileReader = new FileReader();
         private AriaPower ariaPower = new AriaPower();
         private Money money = new Money();
         private Loyalty loyalty = new Loyalty();
@@ -30,8 +31,8 @@ namespace Repassage
             gameForm = newForm;
             counter.CountResources(ref ariaPower, ref loyalty, ref riflemen, ref horsemen,
                 ref infantrymen, ref servicemen, ref money, ref salary);
-            scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\First Week\FirstWeek.txt");
-            phrasesPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Phrases\FirstWeekPhrases.txt");
+            scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\First Week\FirstWeek.txt"));
+            phrasesPaths.Add(fileReader.GetFilePath(@"Phrases\FirstWeekPhrases.txt"));
         }
 
         public void Start()
@@ -48,12 +49,10 @@ namespace Repassage
             var updater = new Updater();
             var counter = new Counter();
             var orderMaker = new OrderMaker();
-            var fileReader = new FileReader();
             var isBattleToday = true;
             var isNotEnded = true;
             var weekCounter = 10;
             var battleCounter = 0;
-
             var characterText = adder.AddImage(gameForm, new Point(500, 820), Resources.Textbox,
                 true, Color.Transparent, Resources.Textbox.Size);
 
@@ -193,9 +192,9 @@ namespace Repassage
             orderButton.Click += (sender, args) => orderMaker.MakeOrder(gameForm, ref scenariosPaths, ref phrasesPaths, ref routes,
             ref end, ref letters, ref phrases, ref loyalty, ref equipment, ref ariaPower, ref ariaBar, ref equipmentBar, ref medicineBar,
             ref armyBar, ref peopleBar, ref battleBar, ref weekend, ref order, ref counter, ref updater, ref endLabel, ref medicine,
-            ref money, ref ariaResource, ref riflemen, ref horsemen, ref infantrymen, ref servicemen, ref loyaltyResource, ref moneyResource,
-            ref equipmentResource, ref medicineResource, ref armyResource, ref currentPhrase, ref currentLetter, ref orderText,
-            ref characterText, ref isNotEnded, ref isBattleToday, ref weekCounter, ref salary, ref battleCounter);
+            ref money, ref ariaResource, ref riflemen, ref horsemen, ref infantrymen, ref servicemen, ref loyaltyResource, 
+            ref moneyResource, ref equipmentResource, ref medicineResource, ref armyResource, ref currentPhrase, ref currentLetter, 
+            ref orderText, ref characterText, ref isNotEnded, ref isBattleToday, ref weekCounter, ref salary, ref battleCounter);
             currentLetter.Click += (sender, args) =>
             {
                 currentLetter.Visible = false;

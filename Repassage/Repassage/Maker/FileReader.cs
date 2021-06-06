@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
 using System.Text;
 
 namespace Repassage
 {
     public class FileReader
     {
+        public string GetFilePath(string target)
+        {
+            var localFolder = Path.GetDirectoryName(Application.ExecutablePath);
+            var index = localFolder.IndexOf("bin");
+            localFolder = localFolder.Substring(0, index);
+            var path = Path.GetFullPath(Path.Combine(localFolder, @"..\Repassage\" + target));
+
+            return path;
+        }
+
         public Dictionary<string, string> GetTexts(string scenarioPath)
         {
             var text = File.ReadAllText(scenarioPath).Split(' ');

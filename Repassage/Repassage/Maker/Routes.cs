@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -7,6 +8,8 @@ namespace Repassage
 {
     public class Routes
     {
+        private FileReader fileReader = new FileReader();
+
         public void ChangeRoute(ref List<String> scenariosPaths, ref List<String> phrasesPaths, ref bool isNotEnded, 
             ref bool isBattleToday, ref int week, Form gameForm, Endings end, Money money, AriaPower ariaPower, 
             Riflemen riflemen, Horsemen horsemen, Infantrymen infantrymen, Servicemen servicemen, int battleCounter, 
@@ -38,37 +41,37 @@ namespace Repassage
             Money money, AriaPower ariaPower, Riflemen riflemen, Horsemen horsemen, Infantrymen infantrymen, 
             Servicemen servicemen, int battleCounter, int ariaSpendings, int armySpendings)
         {
-            scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_AnotherLet.txt");
-            phrasesPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Phrases\SecondWeekPhrases.txt");
+            scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_AnotherLet.txt"));
+            phrasesPaths.Add(fileReader.GetFilePath(@"Phrases\SecondWeekPhrases.txt"));
 
             if (ariaSpendings == 0)
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_FirstLetVer1.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_FirstLetVer1.txt"));
 
             else if (ariaSpendings < money.Amount / 4)
             {
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_FirstLetVer2.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_FirstLetVer2.txt"));
                 ariaPower.GrowthRate += 5;
             }
 
             else
             {
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_FirstLetVer3.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_FirstLetVer3.txt"));
                 ariaPower.GrowthRate += 15;
             }
 
             if (armySpendings < riflemen.Amount * riflemen.Salary + horsemen.Amount * horsemen.Salary
                 + infantrymen.Amount * infantrymen.Salary + servicemen.Amount * servicemen.Salary)
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_ThirdLet.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_ThirdLet.txt"));
 
             if (battleCounter > 0)
             {
                 money.Amount += 1000;
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_SecondLetVer1.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_SecondLetVer1.txt"));
                 isBattleToday = false;
             }
 
             else
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Second Week\SecondWeek_SecondLetVer2.txt");          
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Second Week\SecondWeek_SecondLetVer2.txt"));          
         }
 
         private void CreateThirdWeekFirst(ref List<String> scenariosPaths, ref List<String> phrasesPaths,
@@ -77,19 +80,19 @@ namespace Repassage
             if (isBattleToday)
             {
                 money.Amount += 10000;
-                scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Third Week\ThirdWeek_Prize.txt");
+                scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Third Week\ThirdWeek_Prize.txt"));
             }
 
             week += 1;
-            scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Third Week\ThirdWeek_SecondRoute.txt");
-            phrasesPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Phrases\ThirdWeekSecondRoutePhrases.txt");
+            scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Third Week\ThirdWeek_SecondRoute.txt"));
+            phrasesPaths.Add(fileReader.GetFilePath(@"Phrases\ThirdWeekSecondRoutePhrases.txt"));
         }
 
         private void CreateThirdWeekSecond(ref List<String> scenariosPaths, ref List<String> phrasesPaths, ref int week)
         {
             week += 2;
-            scenariosPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Scenario\Third Week\ThirdWeek_FirstRoute.txt");
-            phrasesPaths.Add(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Phrases\ThirdWeekFirstRoutePhrases.txt");
+            scenariosPaths.Add(fileReader.GetFilePath(@"Scenario\Third Week\ThirdWeek_FirstRoute.txt"));
+            phrasesPaths.Add(fileReader.GetFilePath(@"Phrases\ThirdWeekFirstRoutePhrases.txt"));
         }
     }
 }

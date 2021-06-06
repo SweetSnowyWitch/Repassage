@@ -4,7 +4,6 @@ C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\bin\Debug\netcoreap
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\bin\Debug\netcoreapp3.1\Repassage.runtimeconfig.dev.json
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\bin\Debug\netcoreapp3.1\Repassage.dll
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\bin\Debug\netcoreapp3.1\Repassage.pdb
-C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.csprojAssemblyReference.cache
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.MainForm.resources
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.csproj.GenerateResource.cache
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.AssemblyInfoInputs.cache
@@ -15,3 +14,4 @@ C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreap
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.Resources.resources
 C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.GameModel.resources
+C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\obj\Debug\netcoreapp3.1\Repassage.csproj.AssemblyReference.cache

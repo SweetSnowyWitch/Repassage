@@ -12,6 +12,7 @@ namespace Repassage
         public void Start(Form gameForm)
         {
             var beginText = new TextBox();
+            var fileReader = new FileReader();
             beginText.Visible = false;
             beginText.WordWrap = true;
             beginText.Multiline = true;
@@ -21,7 +22,7 @@ namespace Repassage
             beginText.Location = new Point(450, 0);
             beginText.ScrollBars = ScrollBars.Vertical;
             beginText.ClientSize = new Size(1000, 1080);
-            beginText.Text = File.ReadAllText(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Cutscenes\Texts\Beginning.txt");
+            beginText.Text = File.ReadAllText(fileReader.GetFilePath(@"Cutscenes\Texts\Beginning.txt"));
             gameForm.Controls.Add(beginText);
 
             var beginBackground = new PictureBox();

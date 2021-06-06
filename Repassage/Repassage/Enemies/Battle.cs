@@ -9,9 +9,9 @@ namespace Repassage.Enemies
 {
     class Battle
     {
-        public void Start(Form gameForm, ref bool isNotEnded, ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen,
-            ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen, ref Medicine playerMedicine,
-            ref Equipment playerEquipment, int level)
+        public void Start(Form gameForm, ref bool isNotEnded, ref int totalCorpses, ref Riflemen playerRiflemen, 
+            ref Horsemen playerHorsemen, ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen, 
+            ref Medicine playerMedicine, ref Equipment playerEquipment, int level)
         {
             var enemyRiflemen = new Riflemen();
             var enemyHorsemen = new Horsemen();
@@ -25,11 +25,10 @@ namespace Repassage.Enemies
             var enemyHP = enemyRiflemen.HP * enemyRiflemen.Amount + enemyHorsemen.HP * enemyHorsemen.Amount
                 + enemyInfantrymen.HP * enemyInfantrymen.Amount + enemyServicemen.HP * enemyServicemen.Amount;
             var playerATK = playerRiflemen.ATK * playerRiflemen.Amount + playerHorsemen.ATK * playerHorsemen.Amount
-                + playerInfantrymen.ATK * playerInfantrymen.Amount + playerServicemen.ATK * playerServicemen.Amount + playerEquipment.Amount;
-            var playerHP = playerRiflemen.HP * playerRiflemen.Amount + playerHorsemen.HP * playerHorsemen.Amount
-                + playerInfantrymen.HP * playerInfantrymen.Amount + playerServicemen.HP * playerServicemen.Amount + playerMedicine.Amount;
+                + playerInfantrymen.ATK * playerInfantrymen.Amount + playerServicemen.ATK * playerServicemen.Amount 
+                + playerEquipment.Amount;
 
-            DealResources(ref playerMedicine, ref playerEquipment, ref playerATK, ref enemyHP, ref enemyATK);
+            DealResources(ref playerMedicine, ref playerEquipment, ref enemyHP, ref enemyATK);
             if (playerMedicine.Amount == 0 && enemyATK > 0)
                 KillPlayerArmy(ref totalCorpses, ref playerRiflemen, ref playerHorsemen,
                     ref playerInfantrymen, ref playerServicemen, enemyATK);
@@ -43,8 +42,7 @@ namespace Repassage.Enemies
             ref Infantrymen enemyInfantrymen, ref Servicemen enemyServicemen, int level)
         {
             var fileReader = new FileReader(); 
-            var allLevels = fileReader.GetLevels(@"C:\Users\User\Documents\GitHub\Repassage\Repassage\Repassage\Enemies\LevelsEnemies.txt")
-                                      .Skip(0);
+            var allLevels = fileReader.GetLevels(fileReader.GetFilePath(@"Enemies\LevelsEnemies.txt")).Skip(0);
             switch (level)
             {
                 case 20:
@@ -67,8 +65,7 @@ namespace Repassage.Enemies
             enemyServicemen.Amount = enemyArmy[3];
         }
 
-        private void DealResources(ref Medicine playerMedicine, ref Equipment playerEquipment, ref int playerATK,
-            ref int enemyHP, ref int enemyATK)
+        private void DealResources(ref Medicine playerMedicine, ref Equipment playerEquipment, ref int enemyHP, ref int enemyATK)
         {
             var medicineAmount = playerMedicine.Amount;
             var equipmentAmount = playerEquipment.Amount;
@@ -120,8 +117,9 @@ namespace Repassage.Enemies
                     servicemenDamage = rnd.Next(1, damage / playerServicemen.HP);
             }
 
-            int KillArmyPart(ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen, ref Infantrymen playerInfantrymen,
-                ref Servicemen playerServicemen, int amount, ref int damage, int partDamage, int partHP)
+            int KillArmyPart(ref int totalCorpses, ref Riflemen playerRiflemen, ref Horsemen playerHorsemen, 
+                ref Infantrymen playerInfantrymen, ref Servicemen playerServicemen, int amount, 
+                ref int damage, int partDamage, int partHP)
             {
                 if (damage > 0 && partDamage > 0 && amount > 0)
                 {
