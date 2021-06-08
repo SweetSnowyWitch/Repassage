@@ -33,9 +33,12 @@ namespace Repassage.Enemies
                 KillPlayerArmy(ref totalCorpses, ref playerRiflemen, ref playerHorsemen,
                     ref playerInfantrymen, ref playerServicemen, enemyATK);
 
-            if (playerATK < enemyHP || playerRiflemen.Amount + playerHorsemen.Amount
-                + playerInfantrymen.Amount + playerServicemen.Amount <= 0)
-                end.DeathInBatte(ref isNotEnded, gameForm);
+            if (playerATK < enemyHP) 
+                end.DeathInBatte(ref isNotEnded, gameForm, "Силы атаки армии оказалось недостаточно для победы над врагом");
+
+            if (playerRiflemen.Amount + playerHorsemen.Amount 
+                + playerInfantrymen.Amount + playerServicemen.Amount <= 0) 
+                end.DeathInBatte(ref isNotEnded, gameForm, "Армия была полностью истреблена");
         }
 
         private void BuildEnemyArmy(ref Riflemen enemyRiflemen, ref Horsemen enemyHorsemen,

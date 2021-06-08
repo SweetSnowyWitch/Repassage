@@ -17,8 +17,8 @@ namespace Repassage
             ref TextBox ariaResource, ref Riflemen riflemen, ref Horsemen horsemen, ref Infantrymen infantrymen, ref Servicemen servicemen,
             ref TextBox loyaltyResource, ref TextBox moneyResource, ref TextBox equipmentResource, ref TextBox medicineResource, 
             ref TextBox armyResource, ref TextBox currentPhrase, ref TextBox currentLetter, ref TextBox orderText,
-            ref PictureBox characterText, ref bool isNotEnded, ref bool isBattleToday, 
-            ref int week, ref int salary, ref int battleCounter)
+            ref PictureBox characterText, ref Label equipmentBarPrice, ref Label medicineBarPrice, ref Label peopleBarPrice, 
+            ref bool isNotEnded, ref bool isBattleToday, ref int week, ref int salary, ref int battleCounter)
         {
             var fileReader = new FileReader();
             var newReport = new Dictionary<string, string>();
@@ -30,7 +30,7 @@ namespace Repassage
             weekend.BringToFront();
             counter.CountArmy(ref riflemen, ref horsemen, ref infantrymen, ref servicemen, peopleBar.Value);
             updater.ValuesUPD(ref loyalty, ref equipment, ref ariaPower, ref medicine, ref money,
-                ref ariaBar, ref equipmentBar, ref medicineBar, ref armyBar, ref peopleBar, ref salary);
+                ref ariaBar, ref equipmentBar, ref medicineBar, ref armyBar, ref peopleBar, ref salary);         
 
             if (battleBar.Text.Contains("Да"))
             {
@@ -69,15 +69,24 @@ namespace Repassage
             updater.ResourcesUPD(ref loyalty, ref equipment, ref ariaPower, ref medicine, ref money, ref ariaResource,
             ref loyaltyResource, ref moneyResource, ref equipmentResource, ref medicineResource, ref armyResource,
             riflemen.Amount + horsemen.Amount + infantrymen.Amount + servicemen.Amount);
+            updater.TrackBarPricesUPD(equipment, medicine, loyalty, ariaPower, 
+                ref equipmentBarPrice, ref medicineBarPrice, ref peopleBarPrice);
 
-            if (isNotEnded && (ariaPower.Amount <= 0 || money.Amount < 0))
-                end.Criminal(ref isNotEnded, gameForm);
+            if (isNotEnded)
+            {
+                if (ariaPower.Amount <= 0)
+                    end.Criminal(ref isNotEnded, gameForm, "Причиной Вашего ареста стало падение влияния Арии до нуля");
 
+                else if (money.Amount < 0)
+                    end.Criminal(ref isNotEnded, gameForm, 
+                        "Причиной Вашего ареста стало неправильное распределение бюджета, что увело количество валюты в минус");
+            }
+                
             if (isNotEnded && battleCounter > 1)
                 end.Triumph(ref isNotEnded, gameForm);
 
             else if (isNotEnded && week > 40)
-                end.DeathInBatte(ref isNotEnded, gameForm);
+                end.DeathInBatte(ref isNotEnded, gameForm, "Вражеское войско в ночи напало на лагерь и уничтожило Вашу армию");
 
             if (scenariosPaths.Count > 0)
             {

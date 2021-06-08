@@ -37,7 +37,10 @@ namespace Repassage
             ref TrackBar armyBar, ref TrackBar peopleBar, ref int salary)
         {
             if (armyBar.Value > 0)
+            {
                 loyalty.Amount += 10;
+                loyalty.SaleRate = 1 - (loyalty.Amount / 100.0);
+            }
             salary -= armyBar.Value;
             money.Amount -= (int)(equipmentBar.Value * equipment.Price * loyalty.SaleRate +
                 medicineBar.Value * medicine.Price * loyalty.SaleRate + ariaBar.Value + armyBar.Value);
@@ -57,6 +60,14 @@ namespace Repassage
                 equipmentBar.Value, (int)Math.Round(equipment.Price * loyalty.SaleRate), medicineBar.Value,
                 (int)Math.Round(medicine.Price * loyalty.SaleRate), peopleBar.Value, ariaPower.ConvertRate,
                 ariaBar.Value, armyBar.Value, battleBar.Text.Split(' ').Last());
+        }
+
+        public void TrackBarPricesUPD(Equipment equipment, Medicine medicine, Loyalty loyalty, AriaPower ariaPower, 
+            ref Label equipmentBarPrice, ref Label medicineBarPrice, ref Label peopleBarPrice)
+        {
+            equipmentBarPrice.Text = String.Format("{0} валюты/шт.", (int)Math.Round(equipment.Price * loyalty.SaleRate));
+            medicineBarPrice.Text = String.Format("{0} валюты/шт.", (int)Math.Round(medicine.Price * loyalty.SaleRate));
+            peopleBarPrice.Text = String.Format("{0} чел./ед.влияния", ariaPower.ConvertRate);
         }
     }
 }

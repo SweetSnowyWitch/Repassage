@@ -18,7 +18,7 @@ namespace Repassage
 
             salary = riflemen.Amount * riflemen.Salary + horsemen.Amount * horsemen.Salary
                 + infantrymen.Amount * infantrymen.Salary + servicemen.Amount * servicemen.Salary;
-            money.Amount = rnd.Next((int)Math.Round(salary * 2.5), salary * 4);
+            money.Amount = rnd.Next((int)Math.Round(salary * 2.5), salary * 3);
         }
 
         public void CountArmy(ref Riflemen riflemen, 
@@ -26,7 +26,7 @@ namespace Repassage
         {
             var rnd = new Random();
             var newRifleAmount = rnd.Next(totalCount / 2);
-            var newHorseAmount = rnd.Next((totalCount - newRifleAmount) / 2);
+            var newHorseAmount = rnd.Next((totalCount - newRifleAmount) / 3);
             var newInfantryAmount = rnd.Next(totalCount - newRifleAmount - newHorseAmount);
             var newServiceAmount = totalCount - newRifleAmount - newHorseAmount - newInfantryAmount;
 

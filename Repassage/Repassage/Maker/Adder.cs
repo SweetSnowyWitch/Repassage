@@ -8,18 +8,26 @@ namespace Repassage
 {
     public class Adder
     {
-        public TextBox AddResource(Form gameForm, Point iconLocation, Point amountLocation, Image imageIcon, int amount)
+        public TextBox AddPrompt(Form gameForm, Control parent, Point location, string promptText)
         {
-            var resourceAmount = new TextBox();
+            var prompt = AddTextBox(gameForm, location, new Size(300, 250), false, promptText);
+            prompt.ScrollBars = ScrollBars.None;
+            prompt.Font = new Font("Arial", 14);
+            parent.MouseEnter += (sender, args) => prompt.Visible = true;
+            prompt.MouseLeave += (sender, args) => prompt.Visible = false;
 
-            resourceAmount.ReadOnly = true;
-            resourceAmount.BackColor = Color.AntiqueWhite;
-            resourceAmount.Location = amountLocation;
-            resourceAmount.Text = amount.ToString();
-            resourceAmount.Size = new Size(resourceAmount.Text.Length * 35, 50);
+            return prompt;
+        }
+
+        public TextBox AddResource(Form gameForm, Point iconLocation, Point amountLocation, Image imageIcon, int amount, string prompt)
+        {
+            var resourceAmount = AddTextBox(gameForm, amountLocation, new Size(amount.ToString().Length * 35, 50), true, amount.ToString());
+            var resourceImage = AddImage(gameForm, iconLocation, imageIcon, true, Color.Transparent, imageIcon.Size);
+            var resourcePrompt = AddPrompt(gameForm, resourceImage, iconLocation, prompt);
+            
+            resourcePrompt.BringToFront();
+            resourceAmount.Multiline = false;
             resourceAmount.Font = new Font("Arial", 32);
-            AddImage(gameForm, iconLocation, imageIcon, true, Color.Transparent, imageIcon.Size);
-            gameForm.Controls.Add(resourceAmount);
 
             return resourceAmount;
         }
@@ -29,16 +37,17 @@ namespace Repassage
             var newLabel = new Label();
             newLabel.Parent = parent;
             newLabel.Location = labelLocation;
-            newLabel.ClientSize = new Size(900, 50);
-            newLabel.Font = new Font("Arial", 18);
+            newLabel.ClientSize = new Size(900, 30);
+            newLabel.Font = new Font("Arial", 14);
             newLabel.Text = String.Format(phrase, 0);
 
             return newLabel;
         }
 
-        public TrackBar AddTrackBar(Control parent, Point labelLocation, Point trackBarLocation, string phrase, int maxAmount)
-        {
-            var trackLabel = AddLabel(parent, labelLocation, phrase);
+        public TrackBar AddTrackBar(Control parent, Point labelLocation,
+            Point trackBarLocation, string phrase, int maxAmount)
+        {           
+            var trackValueLabel = AddLabel(parent, labelLocation, phrase);
             var trackBar = new TrackBar();
 
             trackBar.Parent = parent;
@@ -47,7 +56,7 @@ namespace Repassage
             trackBar.Maximum = maxAmount;
             trackBar.Scroll += (sender, args) =>
             {
-                trackLabel.Text = String.Format(phrase, trackBar.Value);
+                trackValueLabel.Text = String.Format(phrase, trackBar.Value);
             };
 
             return trackBar;

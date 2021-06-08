@@ -114,17 +114,27 @@ namespace Repassage
             var infoLettersCounter = 1;
 
             var ariaResource = adder.AddResource(gameForm, new Point(20, -1),
-                new Point(180, 10), Resources.AriaIcon, ariaPower.Amount);
+                new Point(180, 10), Resources.AriaIcon, ariaPower.Amount, 
+                "Влияние Арии. \r\nПовышается благодаря инвестициям в Арию. " +
+                "\r\nВажно помнить, что при найме количество влияния округляется.");
             var loyaltyResource = adder.AddResource(gameForm, new Point(300, -1),
-                new Point(450, 10), Resources.LoyaltyIcon, loyalty.Amount);
+                new Point(450, 10), Resources.LoyaltyIcon, loyalty.Amount, 
+                "Лояльность. \r\nПовышается за счёт выплат солдатам и участия в боях." +
+                "\r\nДаёт скидку при совершении закупок.");
             var moneyResource = adder.AddResource(gameForm, new Point(580, -1),
-                new Point(730, 10), Resources.MoneyIcon, money.Amount);
+                new Point(730, 10), Resources.MoneyIcon, money.Amount, 
+                "Валюта. \r\nМожет быть получена в боях.\r\nЗначительная часть валюты выдаётся в первую неделю.");
             var equipmentResource = adder.AddResource(gameForm, new Point(1020, -1),
-                new Point(1170, 10), Resources.EquipmentIcon, equipment.Amount);
+                new Point(1170, 10), Resources.EquipmentIcon, equipment.Amount, 
+                "Снаряжение. \r\nОдна единица снаряжения равна одной единице атаки." +
+                "\r\nСнаряжение ломается в бою с врагом: одна единица снаряжения к одной единице здоровья врага.");
             var medicineResource = adder.AddResource(gameForm, new Point(1320, -1),
-                new Point(1470, 10), Resources.MedicineIcon, medicine.Amount);
+                new Point(1470, 10), Resources.MedicineIcon, medicine.Amount,
+                "Медикаменты. \r\nОдна единица медикаментов равна одной единице здоровья." +
+                "\r\nМедикаменты тратятся в бою с врагом: одна единица медикаментов к одной единице атаки врага.");
             var armyResource = adder.AddResource(gameForm, new Point(1580, -1),
-                new Point(1730, 10), Resources.ArmyIcon, armyTotalAmount);
+                new Point(1730, 10), Resources.ArmyIcon, armyTotalAmount, 
+                "Общее количество армии. \r\nМожет быть увеличено за счёт найма.");
             adder.AddImage(gameForm, new Point(0, 0), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
             adder.AddImage(gameForm, new Point(0, 960), Resources.MainFrame, true, Color.Transparent, Resources.MainFrame.Size);
 
@@ -144,15 +154,23 @@ namespace Repassage
             gameForm.Controls.Add(currentLetter);
 
             var shop = adder.AddImage(gameForm, new Point(450, 100), default, false, Color.AntiqueWhite, archive.Size);
-            var equipmentBar = adder.AddTrackBar(shop, new Point(50, 50), new Point(50, 100), "Количество покупаемого снаряжения: {0}",
-                (int)Math.Floor(money.Amount / (equipment.Price * loyalty.SaleRate)));
-            var medicineBar = adder.AddTrackBar(shop, new Point(50, 150), new Point(50, 200), "Количество покупаемых лекарств: {0}",
-                (int)Math.Floor(money.Amount / (medicine.Price * loyalty.SaleRate)));
-            var peopleBar = adder.AddTrackBar(shop, new Point(50, 250), new Point(50, 300), "Количество нанимаемых людей: {0}",
-                50 * ariaPower.ConvertRate);
-            var ariaBar = adder.AddTrackBar(shop, new Point(50, 350), new Point(50, 400), "Выделяемая Арии сумма: {0}", money.Amount);
-            var armyBar = adder.AddTrackBar(shop, new Point(50, 450), new Point(50, 500), "Выплачиваемая роте сумма: {0}", money.Amount);
-            var battleBar = adder.AddButton(shop, new Point(50, 580), "Принять участие в грядущей битве: Нет");
+
+            var equipmentBarPrice = adder.AddLabel(shop, new Point(680, 60), "");
+            var medicineBarPrice = adder.AddLabel(shop, new Point(680, 160), "");
+            var peopleBarPrice = adder.AddLabel(shop, new Point(680, 260), "");
+
+            var equipmentBar = adder.AddTrackBar(shop, new Point(80, 60), new Point(50, 100),
+                "Количество покупаемого снаряжения: {0}", (int)Math.Floor(money.Amount / (equipment.Price * loyalty.SaleRate)));           
+            var medicineBar = adder.AddTrackBar(shop, new Point(80, 160), new Point(50, 200), 
+                "Количество покупаемых лекарств: {0}", (int)Math.Floor(money.Amount / (medicine.Price * loyalty.SaleRate)));            
+            var peopleBar = adder.AddTrackBar(shop, new Point(80, 260), new Point(50, 300), 
+                "Количество нанимаемых людей: {0}", 50 * ariaPower.ConvertRate);
+            var ariaBar = adder.AddTrackBar(shop, new Point(80, 360), new Point(50, 400), "Выделяемая Арии сумма: {0}", money.Amount);
+            var armyBar = adder.AddTrackBar(shop, new Point(80, 460), new Point(50, 500), "Выплачиваемая роте сумма: {0}", money.Amount);
+            var battleBar = adder.AddButton(shop, new Point(80, 560), "Принять участие в грядущей битве: Нет");
+
+            updater.TrackBarPricesUPD(equipment, medicine, loyalty, ariaPower, 
+                ref equipmentBarPrice, ref medicineBarPrice, ref peopleBarPrice);
             peopleBar.TickFrequency = ariaPower.ConvertRate;
 
             var order = adder.AddImage(gameForm, new Point(450, 100), default, false, Color.AntiqueWhite, new Size(1000, 840));
@@ -189,12 +207,17 @@ namespace Repassage
             archive.Click += (sender, args) => archive.Visible = false;
             order.Click += (sender, args) => order.Visible = false;
             shop.Click += (sender, args) => shop.Visible = false;
-            orderButton.Click += (sender, args) => orderMaker.MakeOrder(gameForm, ref scenariosPaths, ref phrasesPaths, ref routes,
-            ref end, ref letters, ref phrases, ref loyalty, ref equipment, ref ariaPower, ref ariaBar, ref equipmentBar, ref medicineBar,
-            ref armyBar, ref peopleBar, ref battleBar, ref weekend, ref order, ref counter, ref updater, ref endLabel, ref medicine,
-            ref money, ref ariaResource, ref riflemen, ref horsemen, ref infantrymen, ref servicemen, ref loyaltyResource, 
-            ref moneyResource, ref equipmentResource, ref medicineResource, ref armyResource, ref currentPhrase, ref currentLetter, 
-            ref orderText, ref characterText, ref isNotEnded, ref isBattleToday, ref weekCounter, ref salary, ref battleCounter);
+            orderButton.Click += (sender, args) =>
+            {
+                orderMaker.MakeOrder(gameForm, ref scenariosPaths, ref phrasesPaths,
+                ref routes, ref end, ref letters, ref phrases, ref loyalty, ref equipment, ref ariaPower, ref ariaBar,
+                ref equipmentBar, ref medicineBar, ref armyBar, ref peopleBar, ref battleBar, ref weekend, ref order,
+                ref counter, ref updater, ref endLabel, ref medicine, ref money, ref ariaResource, ref riflemen,
+                ref horsemen, ref infantrymen, ref servicemen, ref loyaltyResource, ref moneyResource, ref equipmentResource,
+                ref medicineResource, ref armyResource, ref currentPhrase, ref currentLetter, ref orderText, ref characterText,
+                ref equipmentBarPrice, ref medicineBarPrice, ref peopleBarPrice, ref isNotEnded, ref isBattleToday,
+                ref weekCounter, ref salary, ref battleCounter);
+            };
             currentLetter.Click += (sender, args) =>
             {
                 currentLetter.Visible = false;
